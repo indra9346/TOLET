@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy, HostListener, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -21,6 +21,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isScrolled = signal<boolean>(false);
   isHomePage = signal<boolean>(true);
   isProfileDropdownOpen = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      const open = this.isMobileMenuOpen();
+      if (open) {
+        document.body.classList.add('no-scroll');
+      } else {
+        document.body.classList.remove('no-scroll');
+      }
+    });
+  }
 
   ngOnInit() {
     this.checkCurrentRoute(this.router.url);

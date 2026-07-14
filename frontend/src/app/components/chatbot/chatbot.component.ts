@@ -28,6 +28,16 @@ export class ChatbotComponent implements AfterViewChecked {
       this.chatService.messages();
       setTimeout(() => this.scrollToBottom(), 100);
     });
+
+    // Prevent background scrolling on mobile when chatbot is open
+    effect(() => {
+      const open = this.isOpen();
+      if (open && window.innerWidth <= 480) {
+        document.body.classList.add('no-scroll');
+      } else {
+        document.body.classList.remove('no-scroll');
+      }
+    });
   }
 
   ngAfterViewChecked() {
