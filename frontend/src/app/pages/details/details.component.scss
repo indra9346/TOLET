@@ -1,7 +1,17 @@
 .details-page {
-  padding: 96px 24px 40px 24px;
-  max-width: 1200px;
+  padding: 96px 24px 24px 24px;
+  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  overflow-x: hidden;
+
+  @media (max-width: 768px) {
+    padding: 80px 12px 24px 12px;
+    gap: 20px;
+  }
 }
 
 .loader-container {
@@ -485,8 +495,14 @@
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 576px) {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 

@@ -408,6 +408,7 @@
     height: 100vh;
     max-height: 100vh;
     border-radius: 0 !important;
+    z-index: 2000 !important; /* ensure it stays on top of page fixed navbar (z-index 1000) */
   }
   
   .chat-trigger-btn {

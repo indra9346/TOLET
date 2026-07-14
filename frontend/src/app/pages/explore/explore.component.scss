@@ -1,10 +1,17 @@
 .explore-page {
   padding: 96px 24px 24px 24px;
   max-width: 1440px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-x: hidden;
+
+  @media (max-width: 768px) {
+    padding: 80px 12px 12px 12px;
+    gap: 16px;
+  }
 }
 
 /* Top Search Bar styling */
@@ -16,6 +23,11 @@
   background-color: white !important;
   padding: 16px 24px !important;
   border-radius: var(--border-radius-md);
+
+  @media (max-width: 768px) {
+    padding: 12px 16px !important;
+    gap: 12px;
+  }
 
   .location-picker {
     display: flex;
@@ -64,6 +76,8 @@
       border: 1px solid rgba(0, 0, 0, 0.08);
       font-weight: 500;
       border-radius: var(--border-radius-sm);
+      flex: 1;
+      min-width: 0; /* allow input to shrink on narrow mobile screens */
       
       &:focus {
         border-color: var(--primary);
@@ -73,6 +87,14 @@
     
     .btn {
       min-width: 100px;
+    }
+
+    @media (max-width: 480px) {
+      gap: 8px;
+      .btn {
+        min-width: 80px;
+        padding: 8px 16px;
+      }
     }
   }
 
