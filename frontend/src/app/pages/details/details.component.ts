@@ -44,6 +44,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       if (id) {
         this.activeImageIndex.set(0); // Reset index on route change
         this.fetchListingDetails(id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
   }
@@ -215,7 +216,13 @@ export class DetailsComponent implements OnInit, OnDestroy {
   private initDetailMap() {
     setTimeout(() => {
       const list = this.listing();
-      if (!list || this.map) return;
+      if (!list) return;
+
+      // Clean up previous map if it exists
+      if (this.map) {
+        this.map.remove();
+        this.map = null;
+      }
 
       const lng = list.location.coordinates[0];
       const lat = list.location.coordinates[1];

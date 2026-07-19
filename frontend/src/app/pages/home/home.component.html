@@ -171,8 +171,8 @@
 
       <!-- Property Grid -->
       <div class="listings-grid" *ngIf="!isLoading() && popularListings().length > 0">
-        <div class="listing-card glass-card" *ngFor="let list of popularListings()">
-          <div class="image-wrapper zoom-wrapper" [routerLink]="['/explore/details', list._id]">
+        <div class="listing-card glass-card clickable-card" *ngFor="let list of popularListings()" [routerLink]="['/explore/details', list._id]">
+          <div class="image-wrapper zoom-wrapper">
             <img [src]="list.images && list.images[0] ? list.images[0] : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'" alt="{{ list.title }}" class="property-img" />
             <span class="badge property-type">{{ list.propertyType }}</span>
             <button class="fav-btn" [class.favorited]="isFavorite(list._id || '')" (click)="toggleFavorite($event, list._id || '')" aria-label="Add to Favorites">
@@ -180,7 +180,7 @@
             </button>
           </div>
           <div class="card-body">
-            <h3 class="card-title" [routerLink]="['/explore/details', list._id]">{{ list.title }}</h3>
+            <h3 class="card-title">{{ list.title }}</h3>
             <p class="locality">📍 {{ list.locality }}, {{ list.city }}</p>
             <div class="meta-row">
               <span class="furnishing-status text-capitalize">{{ list.furnishing }}</span>
@@ -191,7 +191,7 @@
                 <span class="rent">₹{{ list.rent | number }}/mo</span>
                 <span class="deposit">Deposit: ₹{{ list.deposit | number }}</span>
               </div>
-              <a [routerLink]="['/explore/details', list._id]" class="btn-arrow" aria-label="View listing details">➔</a>
+              <span class="btn-arrow" aria-label="View listing details">➔</span>
             </div>
           </div>
         </div>

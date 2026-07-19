@@ -29,7 +29,7 @@
 
       <div class="favorites-list">
         <div class="fav-item-card glass-card" *ngFor="let list of favoriteService.favoriteListings()" [class.selected]="isComparing(list._id || '')">
-          <div class="thumb-wrapper">
+          <div class="thumb-wrapper" [routerLink]="['/explore/details', list._id]" style="cursor: pointer;">
             <img [src]="list.images && list.images[0] ? list.images[0] : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=400&q=80'" alt="{{ list.title }}" class="fav-img" />
           </div>
           

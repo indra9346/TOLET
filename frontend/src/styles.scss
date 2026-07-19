@@ -307,3 +307,12 @@ body.no-scroll {
   height: 100% !important;
   position: relative !important;
 }
+
+/* Clickable Stays UI cards utility */
+.clickable-card {
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-6px);
+  }
+}
