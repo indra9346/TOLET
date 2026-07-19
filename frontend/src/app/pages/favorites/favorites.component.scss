@@ -55,6 +55,8 @@
   grid-template-columns: 360px 1fr;
   gap: 30px;
   align-items: start;
+  width: 100%;
+  min-width: 0;
   
   @media (max-width: 992px) {
     grid-template-columns: 1fr;
@@ -183,6 +185,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
+  min-width: 0;
   
   .column-header {
     display: flex;
@@ -213,6 +217,8 @@
   padding: 0 !important;
   border-radius: var(--border-radius-md);
   overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
   
   &:hover { transform: none; }
 }
