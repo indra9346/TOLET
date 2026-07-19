@@ -21,7 +21,9 @@ export class CreateListingComponent implements OnInit {
 
   listingForm!: FormGroup;
   isLoading = signal<boolean>(false);
+  isVideoUploading = signal<boolean>(false);
   errorMessage = signal<string>('');
+  videoUploadError = signal<string>('');
   successMessage = signal<string>('');
   
   // Step indicator
@@ -188,6 +190,39 @@ export class CreateListingComponent implements OnInit {
     } else {
       this.selectedAmenities.push(amenity);
     }
+    this.saveDraft();
+  }
+
+  onVideoFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      if (file.size > 50 * 1024 * 1024) {
+        alert('File size exceeds 50MB. Please select a smaller video.');
+        return;
+      }
+      this.isVideoUploading.set(true);
+      this.videoUploadError.set('');
+      this.listingService.uploadVideo(file).subscribe({
+        next: (res) => {
+          this.isVideoUploading.set(false);
+          this.listingForm.patchValue({
+            videoUrl: res.url
+          });
+          this.saveDraft();
+        },
+        error: (err) => {
+          this.isVideoUploading.set(false);
+          this.videoUploadError.set(err.error?.message || 'Failed to upload video.');
+        }
+      });
+    }
+  }
+
+  removeVideo() {
+    this.listingForm.patchValue({
+      videoUrl: ''
+    });
     this.saveDraft();
   }
 

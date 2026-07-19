@@ -149,8 +149,75 @@
           </div>
 
           <div class="form-group">
-            <label for="videoUrl">Walk-through Video URL (YouTube, optional)</label>
-            <input id="videoUrl" type="url" formControlName="videoUrl" class="form-control" placeholder="e.g. https://youtube.com/watch?v=..." />
+            <label for="videoUrl">Walk-through Video (YouTube URL or Upload File)</label>
+            
+            <!-- YouTube URL Input -->
+            <input 
+              id="videoUrl" 
+              type="url" 
+              formControlName="videoUrl" 
+              class="form-control" 
+              placeholder="Paste YouTube video link: e.g. https://youtube.com/watch?v=..." 
+              [readonly]="isVideoUploading() || (listingForm.get('videoUrl')?.value && !listingForm.get('videoUrl')?.value.startsWith('http'))"
+            />
+            
+            <!-- Divider or Upload File Option -->
+            <div class="video-upload-section" style="margin-top: 14px;">
+              <span class="or-divider" style="display: block; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">— OR Upload recorded video from your phone —</span>
+              
+              <div class="upload-controls" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <!-- Hide actual file input, style a nice button instead -->
+                <input 
+                  #videoFileInput 
+                  type="file" 
+                  accept="video/*" 
+                  (change)="onVideoFileSelected($event)" 
+                  style="display: none;" 
+                />
+                
+                <button 
+                  type="button" 
+                  (click)="videoFileInput.click()" 
+                  class="btn btn-secondary btn-sm"
+                  [disabled]="isVideoUploading() || (listingForm.get('videoUrl')?.value && !listingForm.get('videoUrl')?.value.startsWith('http'))"
+                >
+                  🎥 Select & Upload Video File
+                </button>
+                
+                <!-- Spinner -->
+                <span *ngIf="isVideoUploading()" class="spinner-text" style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">
+                  ⏳ Uploading video file...
+                </span>
+              </div>
+              
+              <!-- Video upload error message -->
+              <span *ngIf="videoUploadError()" class="error-msg" style="margin-top: 6px; display: block; color: var(--accent);">
+                ⚠️ {{ videoUploadError() }}
+              </span>
+              
+              <!-- Preview of uploaded video -->
+              <div 
+                *ngIf="listingForm.get('videoUrl')?.value && !listingForm.get('videoUrl')?.value.startsWith('http')" 
+                class="uploaded-video-preview" 
+                style="margin-top: 14px; padding: 12px; background: var(--light-bg); border-radius: var(--border-radius-sm); border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; gap: 12px;"
+              >
+                <div class="preview-info" style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 1.2rem;">✅</span>
+                  <div style="display: flex; flex-direction: column;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-dark);">Recorded Video Uploaded</span>
+                    <span style="font-size: 0.7rem; color: var(--text-muted);">{{ listingForm.get('videoUrl')?.value }}</span>
+                  </div>
+                </div>
+                <button 
+                  type="button" 
+                  (click)="removeVideo()" 
+                  class="btn-remove" 
+                  style="background: transparent; border: none; color: var(--accent); font-size: 0.75rem; font-weight: 600; cursor: pointer;"
+                >
+                  ✕ Remove
+                </button>
+              </div>
+            </div>
           </div>
 
           <div class="form-group">

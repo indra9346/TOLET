@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ListingService } from '../../services/listing.service';
 import { FavoriteService } from '../../services/favorite.service';
 import { GeolocationService } from '../../services/geolocation.service';
 import { AuthService } from '../../services/auth.service';
 import { Listing } from '../../models/listing.model';
+import { environment } from '../../../environments/environment';
 import * as L from 'leaflet';
 
 @Component({
@@ -22,6 +24,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   private geolocationService = inject(GeolocationService);
   authService = inject(AuthService);
   private router = inject(Router);
+  private sanitizer = inject(DomSanitizer);
 
   listing = signal<Listing | null>(null);
   isLoading = signal<boolean>(true);
@@ -179,6 +182,33 @@ export class DetailsComponent implements OnInit, OnDestroy {
       return (owner as any).email || '';
     }
     return '';
+  }
+
+  getYouTubeEmbedUrl(url: string | undefined): SafeResourceUrl | null {
+    if (!url) return null;
+    let videoId = '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      videoId = match[2];
+      return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}`);
+    }
+    return null;
+  }
+
+  isDirectVideo(url: string | undefined): boolean {
+    if (!url) return false;
+    const cleanUrl = url.split('?')[0].toLowerCase();
+    return cleanUrl.endsWith('.mp4') || cleanUrl.endsWith('.webm') || cleanUrl.endsWith('.ogg');
+  }
+
+  getVideoUrl(url: string | undefined): string {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    const base = environment.apiUrl.replace(/\/api$/, '');
+    return `${base}${url}`;
   }
 
   // Initialize Leaflet Map for details page

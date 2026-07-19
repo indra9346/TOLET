@@ -16,6 +16,11 @@ const app = express();
 // Body parser
 app.use(express.json());
 
+const path = require('path');
+
+// Set static folder for uploads
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 // Enable CORS with production configurations
 const allowedOrigins = [
   'http://localhost:4200',

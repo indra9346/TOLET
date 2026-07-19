@@ -59,4 +59,11 @@ export class ListingService {
 
     return this.http.get<ListingSearchResponse>(`${this.apiUrl}/search`, { params });
   }
+
+  // Upload walkthrough video file (Owners only)
+  uploadVideo(file: File): Observable<{ success: boolean; url: string }> {
+    const formData = new FormData();
+    formData.append('video', file);
+    return this.http.post<{ success: boolean; url: string }>(`${this.apiUrl}/upload-video`, formData);
+  }
 }

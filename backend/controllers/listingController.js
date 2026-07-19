@@ -330,3 +330,62 @@ exports.searchListings = async (req, res, next) => {
     next(error);
   }
 };
+
+const multer = require('multer');
+const path = require('path');
+
+// Configure multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../public/uploads/'));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, 'video-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+// Configure upload middleware
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // limit to 50MB
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only video files are allowed!'), false);
+    }
+  }
+}).single('video');
+
+// @desc    Upload video walkthrough file
+// @route   POST /api/listings/upload-video
+// @access  Private (Owner only)
+exports.uploadVideo = (req, res, next) => {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({
+        success: false,
+        message: `Multer upload error: ${err.message}`
+      });
+    } else if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please upload a video file'
+      });
+    }
+
+    const fileUrl = `/uploads/${req.file.filename}`;
+    res.status(200).json({
+      success: true,
+      url: fileUrl
+    });
+  });
+};

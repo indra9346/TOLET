@@ -5,13 +5,15 @@ const {
   createListing,
   updateListing,
   deleteListing,
-  searchListings
+  searchListings,
+  uploadVideo
 } = require('../controllers/listingController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 router.get('/search', searchListings);
+router.post('/upload-video', protect, authorize('owner'), uploadVideo);
 
 router
   .route('/')
